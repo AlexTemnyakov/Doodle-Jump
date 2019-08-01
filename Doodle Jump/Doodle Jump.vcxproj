@@ -18,6 +18,27 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\game\Game.h" />
+    <ClInclude Include="source\player\Player.h" />
+    <ClInclude Include="source\texture\Texture.h" />
+    <ClInclude Include="source\time\Timer.h" />
+    <ClInclude Include="source\user_interface\Window.h" />
+    <ClInclude Include="source\utils\Utils.h" />
+    <ClInclude Include="source\world\Block.h" />
+    <ClInclude Include="source\world\World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\game\Game.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\player\Player.cpp" />
+    <ClCompile Include="source\texture\Texture.cpp" />
+    <ClCompile Include="source\time\Timer.cpp" />
+    <ClCompile Include="source\user_interface\Window.cpp" />
+    <ClCompile Include="source\utils\Utils.cpp" />
+    <ClCompile Include="source\world\Block.cpp" />
+    <ClCompile Include="source\world\World.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{2ADF5EA0-9398-43A5-88E7-0BD9AEC43AB6}</ProjectGuid>
@@ -88,11 +109,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>G:\Projects\CPP\Doodle Jump\Doodle Jump\libraries\SDL2_ttf-2.0.15\include;G:\Projects\CPP\Doodle Jump\Doodle Jump\libraries\SDL2_image-2.0.5\include;G:\Projects\CPP\Doodle Jump\Doodle Jump\libraries\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>G:\Projects\CPP\Doodle-Jump\Doodle Jump\libraries\SDL2_ttf-2.0.15\include;G:\Projects\CPP\Doodle-Jump\Doodle Jump\libraries\SDL2_image-2.0.5\include;G:\Projects\CPP\Doodle-Jump\Doodle Jump\libraries\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>G:\Projects\CPP\Doodle Jump\Doodle Jump\libraries\SDL2_ttf-2.0.15\lib\x64;G:\Projects\CPP\Doodle Jump\Doodle Jump\libraries\SDL2_image-2.0.5\lib\x64;G:\Projects\CPP\Doodle Jump\Doodle Jump\libraries\SDL\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>G:\Projects\CPP\Doodle-Jump\Doodle Jump\libraries\SDL2_ttf-2.0.15\lib\x64;G:\Projects\CPP\Doodle-Jump\Doodle Jump\libraries\SDL2_image-2.0.5\lib\x64;G:\Projects\CPP\Doodle-Jump\Doodle Jump\libraries\SDL\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -126,23 +147,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="source\game\Game.cpp" />
-    <ClCompile Include="source\main.cpp" />
-    <ClCompile Include="source\player\Player.cpp" />
-    <ClCompile Include="source\texture\Texture.cpp" />
-    <ClCompile Include="source\time\Timer.cpp" />
-    <ClCompile Include="source\user_interface\Window.cpp" />
-    <ClCompile Include="source\utils\Utils.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="source\game\Game.h" />
-    <ClInclude Include="source\player\Player.h" />
-    <ClInclude Include="source\texture\Texture.h" />
-    <ClInclude Include="source\time\Timer.h" />
-    <ClInclude Include="source\user_interface\Window.h" />
-    <ClInclude Include="source\utils\Utils.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -3,6 +3,7 @@
 
 #include "..\user_interface\Window.h"
 #include "..\player\Player.h"
+#include "..\utils\Utils.h"
 
 class Game
 {
@@ -11,6 +12,7 @@ private:
 	bool quit;
 	Window* window;
 	Player* player;
+	Utils u;
 public:
 	Game();
 	bool init();

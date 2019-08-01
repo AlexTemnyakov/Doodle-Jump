@@ -1,13 +1,12 @@
 #include "Game.h"
 #include <stdio.h>
 #include "..\time\Timer.h"
-#include "..\utils\Utils.h"
 
 Game::Game()
 {
 	fps = 60;
 	quit = false;
-	window = new Window(800, 800);
+	window = new Window(u.W_WIDTH, u.W_HEIGHT);
 	player = NULL;
 }
 
@@ -19,7 +18,7 @@ bool Game::init()
 		ret = false;
 
 
-	player = new Player("resources/textures/player.png", 80, 80, 10, 10, window->getRenderer());
+	player = new Player("resources/textures/player.png", u.PLAYER_WIDTH, u.PLAYER_HEIGHT, 10, 10, window->getRenderer());
 
 	return ret;
 }
@@ -27,7 +26,6 @@ bool Game::init()
 void Game::run()
 {
 	SDL_Event e;
-	Utils u;
 
 	Timer t;
 	uint64_t lastTime, currentTime, timer, _fps = (uint64_t) fps;
@@ -48,6 +46,8 @@ void Game::run()
 			lastTime = currentTime;
 
 			window->clearScreen();
+
+			player->update();
 
 			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 			if (currentKeyStates[SDL_SCANCODE_UP])
