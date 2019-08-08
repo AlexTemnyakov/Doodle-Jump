@@ -18,7 +18,8 @@ bool Game::init()
 		ret = false;
 
 
-	player = new Player("resources/textures/player.png", u.PLAYER_WIDTH, u.PLAYER_HEIGHT, 10, 10, window->getRenderer());
+	player = new Player("resources/textures/player.png", u.PLAYER_WIDTH, u.PLAYER_HEIGHT, 300, 500, window->getRenderer());
+	world = new World(window->getRenderer());
 
 	return ret;
 }
@@ -47,30 +48,36 @@ void Game::run()
 
 			window->clearScreen();
 
-			player->update();
+			world->update(window->getRenderer(), player->getY());
+			player->update(world->getBlocks());
 
 			const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 			if (currentKeyStates[SDL_SCANCODE_UP])
 			{
-				printf("Up!\n");
-				player->move(0, -u.moveDist);
+				//printf("Up!\n");
+				//player->move(0, -u.moveDist, world->getBlocks());
 			}
 			if (currentKeyStates[SDL_SCANCODE_DOWN])
 			{
-				printf("Down!\n");
-				player->move(0, u.moveDist);
+				//printf("Down!\n");
+				player->move(0, u.moveDist, world->getBlocks());
 			}
 			if (currentKeyStates[SDL_SCANCODE_LEFT])
 			{
-				printf("Left!\n");
-				player->move(-u.moveDist, 0);
+				//printf("Left!\n");
+				player->move(-u.moveDist, 0, world->getBlocks());
 			}
 			if (currentKeyStates[SDL_SCANCODE_RIGHT])
 			{
-				printf("Right!\n");
-				player->move(u.moveDist, 0);
+				//printf("Right!\n");
+				player->move(u.moveDist, 0, world->getBlocks());
+			}
+			if (currentKeyStates[SDL_SCANCODE_SPACE])
+			{
+				player->jump(world->getBlocks());
 			}
 
+			world->render(window->getRenderer());
 			player->render(window->getRenderer());
 
 			window->updateScreen();

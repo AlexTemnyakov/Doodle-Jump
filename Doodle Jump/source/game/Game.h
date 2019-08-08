@@ -4,6 +4,7 @@
 #include "..\user_interface\Window.h"
 #include "..\player\Player.h"
 #include "..\utils\Utils.h"
+#include "..\world\World.h"
 
 class Game
 {
@@ -12,6 +13,7 @@ private:
 	bool quit;
 	Window* window;
 	Player* player;
+	World* world;
 	Utils u;
 public:
 	Game();

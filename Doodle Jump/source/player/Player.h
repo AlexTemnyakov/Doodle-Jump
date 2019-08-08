@@ -5,9 +5,12 @@
 #include <SDL_image.h>
 #include <stdio.h>
 #include <string>
+#include <set>
 #include "..\texture\Texture.h"
 #include "..\utils\Utils.h"
 #include "..\time\Timer.h"
+#include "..\world\Block.h"
+#include "..\world\World.h"
 
 class Player
 {
@@ -17,15 +20,27 @@ private:
 	// false - left, true - right
 	bool dir;
 	// calculating of free fall
-	int speed = 0;
-	long lastTime = 0;
+	double speed = 0;
+	double lastTime = 0;
+	// for jumping
+	bool jumping = false;
+	int jumpDist = 0;
+	long jumpTimer = 0;
+	int jumpTotalTime = 0;
+	// utilities
 	Utils u;
 	Timer t;
 public:
 	Player(const char* texturePath, int w, int h, int x, int y, SDL_Renderer* renderer);
 	void render(SDL_Renderer* renderer);
-	void move(int moveX, int moveY);
-	void update();
+	void move(int moveX, int moveY, set<Block*> blocks);
+	void update(set<Block*> blocks);
+	void jump(set<Block*> blocks);
+	Rectangle getRectangle();
+	int getY();
+	int getX();
+	int getWidth();
+	int getHeight();
 };
 
 #endif // !PLAYER_H
