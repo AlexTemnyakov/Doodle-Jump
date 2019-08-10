@@ -2,7 +2,7 @@
 #include <thread>
 
 Rectangle* collisions(Player* p, set<Block*> blocks);
-Rectangle hasGround(Player* p, set<Block*> blocks);
+Rectangle* hasGround(Player* p, set<Block*> blocks);
 
 Player::Player(const char* texturePath, int w, int h, int _x, int _y, SDL_Renderer* renderer)
 {
@@ -117,7 +117,7 @@ void Player::update(set<Block*> blocks)
 			jumpTimer = t.milliseconds();
 		}
 
-		// because of shifting the world if the player is above than 2/3 part of the window,
+		// because of shifting the world if the player is above than 1/3 part of the window,
 		// we need to avoid extension of the jump
 		int shift = (y < u.W_HEIGHT / 3) ? 8 : 0;
 		// how long the player has jumped
@@ -147,6 +147,7 @@ void Player::update(set<Block*> blocks)
 			return;
 		}
 
+		// if there is a collision, move the player back
 		if (collisions(this, blocks) != NULL)
 		{
 			y += jumpRange;
@@ -161,13 +162,13 @@ void Player::update(set<Block*> blocks)
 	{
 		jump(blocks);
 		// free fall
-		if (hasGround(this, blocks).x == -1)
+		if (hasGround(this, blocks) == NULL)
 		{
 			y += 15;
-			Rectangle r = hasGround(this, blocks);
-			if (r.x != -1)
+			Rectangle* r = hasGround(this, blocks);
+			if (r != NULL)
 			{
-				y = r.y - height - 1;
+				y = r->y - height - 1;
 			}
 		}
 	}
@@ -175,7 +176,7 @@ void Player::update(set<Block*> blocks)
 
 void Player::jump(set<Block*> blocks)
 {
-	if (hasGround(this, blocks).x != -1 && jumpDist == 0 && jumpTimer == 0)
+	if (hasGround(this, blocks) != NULL && jumpDist == 0 && jumpTimer == 0)
 	{
 		jumping = true;
 	}
@@ -225,7 +226,7 @@ Rectangle* collisions(Player* p, set<Block*> blocks)
 	return NULL;
 }
 
-Rectangle hasGround(Player* p, set<Block*> blocks)
+Rectangle* hasGround(Player* p, set<Block*> blocks)
 {
 	for (auto b : blocks)
 	{
@@ -233,8 +234,9 @@ Rectangle hasGround(Player* p, set<Block*> blocks)
 		bool xInRange = ((p->getX() >= b->getX()) && (p->getX() <= b->getX() + b->getWidth())) || ((p->getX() + p->getWidth() >= b->getX()) && (p->getX() + p->getWidth() <= b->getX() + b->getWidth()));
 		if (xInRange && yInRange)
 		{
-			return b->getRectangle();
+			Rectangle r = b->getRectangle();
+			return &r;
 		}
 	}
-	return { -1 };
+	return NULL;
 }

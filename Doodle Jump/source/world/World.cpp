@@ -28,11 +28,13 @@ World::~World()
 
 void World::update(SDL_Renderer* renderer, int playersY)
 {
+	// if the player if above 1/3 part of the window, shift the game world
 	if (playersY > u.W_HEIGHT / 3)
 		return;
 	int attemptsTotal = 50, attemptsCount = 0;
 	bool blockInRange = false;
 	std::set<Block*>::iterator it = blocks.begin();
+	// if there is no block near, create new one
 	for (auto b : blocks)
 	{
 		if (valueInRange(0, b->getY() - 200, b->getY() + u.BLOCK_HEIGHT + 200))
@@ -43,6 +45,7 @@ void World::update(SDL_Renderer* renderer, int playersY)
 	}
 	if (!blockInRange)
 	{
+		// create a block that doesn't interesect with other blocks
 		while (true)
 		{
 			int xNew = rand() % (u.W_WIDTH - u.BLOCK_WIDTH);
@@ -66,6 +69,7 @@ void World::update(SDL_Renderer* renderer, int playersY)
 		}
 	}
 
+	// shift blocks and delete them, if they are out of the game world
 	while (it != blocks.end())
 	{
 		Block* b = *it;

@@ -49,6 +49,7 @@ void Game::run()
 			runMenu();
 			break;
 		case GAME:
+			// start a new game if the player is dead
 			if (player == NULL && world == NULL)
 			{
 				player = new Player("resources/textures/player.png", u.PLAYER_WIDTH, u.PLAYER_HEIGHT, 300, 500, window->getRenderer());
@@ -189,6 +190,7 @@ void Game::runGameLoop()
 		}
 
 	}
+	// the player is dead
 	window->clearScreen();
 	state = MENU;
 	player->~Player();
