@@ -15,6 +15,8 @@ Texture::Texture(const char* path, int w, int h, SDL_Renderer* renderer)
 	height = h;
 }
 
+Texture::Texture(){}
+
 Texture::~Texture()
 {
 	free();
@@ -99,6 +101,80 @@ void Texture::loadFromFile(const char* path, SDL_Renderer* renderer)
 		SDL_FreeSurface(loadedSurface);
 	}
 
+	texture = newTexture;
+}
+
+void Texture::loadFromRenderedText(std::string text, SDL_Color textColor, TTF_Font* font, SDL_Renderer* renderer)
+{
+	//Get rid of preexisting texture
+	free();
+
+	//The final texture
+	SDL_Texture* newTexture = NULL;
+
+	//Render text surface
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), textColor);
+	if (textSurface == NULL)
+	{
+		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+	}
+	else
+	{
+		//Create texture from surface pixels
+		newTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+		if (newTexture == NULL)
+		{
+			printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
+		}
+		else
+		{
+			//Get image dimensions
+			width = textSurface->w;
+			height = textSurface->h;
+		}
+
+		//Get rid of old surface
+		SDL_FreeSurface(textSurface);
+	}
+
+	//Return success
+	texture = newTexture;
+}
+
+void Texture::loadFromRenderedText(const char* text, SDL_Color textColor, TTF_Font* font, SDL_Renderer* renderer)
+{
+	//Get rid of preexisting texture
+	free();
+
+	//The final texture
+	SDL_Texture* newTexture = NULL;
+
+	//Render text surface
+	SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, textColor);
+	if (textSurface == NULL)
+	{
+		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
+	}
+	else
+	{
+		//Create texture from surface pixels
+		newTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+		if (newTexture == NULL)
+		{
+			printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
+		}
+		else
+		{
+			//Get image dimensions
+			width = textSurface->w;
+			height = textSurface->h;
+		}
+
+		//Get rid of old surface
+		SDL_FreeSurface(textSurface);
+	}
+
+	//Return success
 	texture = newTexture;
 }
 

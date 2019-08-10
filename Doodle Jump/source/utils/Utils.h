@@ -1,4 +1,6 @@
 #pragma once
+#include <SDL.h>
+#include <SDL_ttf.h>
 
 struct Rectangle
 {
@@ -33,6 +35,9 @@ public:
 
 	// dimension of the window
 	const int W_WIDTH = 800, W_HEIGHT = 800;
+
+	SDL_Color BLACK = { 0, 0, 0 };
+	TTF_Font* arialBold50 = TTF_OpenFont("resources/fonts/arialbd.ttf", 50);
 
 	static bool fileExists(const char* path);
 };

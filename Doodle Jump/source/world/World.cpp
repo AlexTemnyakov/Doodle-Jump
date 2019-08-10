@@ -28,7 +28,7 @@ World::~World()
 
 void World::update(SDL_Renderer* renderer, int playersY)
 {
-	if (playersY > u.W_HEIGHT / 2)
+	if (playersY > u.W_HEIGHT / 3)
 		return;
 	int attemptsTotal = 50, attemptsCount = 0;
 	bool blockInRange = false;

@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <thread>
 
-Rectangle collisions(Player* p, set<Block*> blocks);
+Rectangle* collisions(Player* p, set<Block*> blocks);
 Rectangle hasGround(Player* p, set<Block*> blocks);
 
 Player::Player(const char* texturePath, int w, int h, int _x, int _y, SDL_Renderer* renderer)
@@ -14,6 +14,13 @@ Player::Player(const char* texturePath, int w, int h, int _x, int _y, SDL_Render
 	x = _x;
 	y = _y;
 	dir = true;
+	totalDist = 0;
+}
+
+Player::~Player()
+{
+	textureLeft->~Texture();
+	textureRight->~Texture();
 }
 
 void Player::render(SDL_Renderer* renderer)
@@ -26,14 +33,14 @@ void Player::render(SDL_Renderer* renderer)
 
 void Player::move(int moveX, int moveY, set<Block*> blocks)
 {
-	if (moveX > 0)
+	if (moveX > 0) // move to the right
 	{
 		dir = true;
 		if (x + width + moveX < u.W_WIDTH)
 		{
 			x += moveX;
-			Rectangle c = collisions(this, blocks);
-			if (c.x != -1)
+			Rectangle* c = collisions(this, blocks);
+			if (c != NULL)
 			{
 				printf("Collision moveX > 0\n");
 				//x = c.x - width - 1;
@@ -46,19 +53,16 @@ void Player::move(int moveX, int moveY, set<Block*> blocks)
 			x = u.W_WIDTH - width;
 		}
 	}
-	else if (moveX < 0)
+	else if (moveX < 0) // move to the left
 	{
 		dir = false;
 		if (x + moveX > 0)
 		{
 			x += moveX;
-			Rectangle c = collisions(this, blocks);
-			if (c.x != -1)
+			Rectangle* c = collisions(this, blocks);
+			if (c != NULL)
 			{
-				printf("Collision moveX < 0\n");
-				//this_thread::sleep_for(2s);
-				printf("Before %d after %d\n", x - moveX, c.x + c.width + 1);
-				//x = c.x + c.width + 1;
+				//printf("Collision moveX < 0\n");
 				x -= moveX;
 				return;
 			}
@@ -69,7 +73,7 @@ void Player::move(int moveX, int moveY, set<Block*> blocks)
 		}
 	}
 
-	if (moveY < 0)
+	/*if (moveY < 0)
 	{
 		if (y + moveY > 0)
 		{
@@ -87,22 +91,77 @@ void Player::move(int moveX, int moveY, set<Block*> blocks)
 	}
 	else
 	{
-		/*y += moveY;
+		y += moveY;
 		Rectangle c = collisions(this, blocks);
 		if (c.x != -1)
 		{
 			printf("Collision moveY > 0\n");
 			y = c.y - height - 1;
 			return;
-		}*/
-	}
+		}
+	}*/
 }
 
 void Player::update(set<Block*> blocks)
 {
-	if (hasGround(this, blocks).x == -1)
+	if (jumping)
 	{
-		if (!jumping)
+		printf("Jumping... Distance %d\n", jumpDist);
+		if (jumpTimer == 0)
+		{
+			jumpTimer = t.milliseconds();
+		}
+		else
+		{
+			jumpTotalTime = t.milliseconds() - jumpTimer;
+			jumpTimer = t.milliseconds();
+		}
+
+		// because of shifting the world if the player is above than 2/3 part of the window,
+		// we need to avoid extension of the jump
+		int shift = (y < u.W_HEIGHT / 3) ? 8 : 0;
+		// how long the player has jumped
+		int jumpRange = 0;
+		if (jumpDist < 80)
+		{
+			y -= 10;
+			jumpDist += 10 + shift;
+		}
+		else if (jumpDist < 220)
+		{
+			y -= 8;
+			jumpDist += 8 + shift;
+		}
+		else if (jumpDist < 280)
+		{
+			y -= 5;
+			jumpDist += 5 + shift;
+		}
+		else
+		{
+			printf("End of jumping\n");
+			jumping = false;
+			jumpDist = 0;
+			jumpTimer = 0;
+			jumpTotalTime = 0;
+			return;
+		}
+
+		if (collisions(this, blocks) != NULL)
+		{
+			y += jumpRange;
+			jumpDist = 0;
+			jumping = false;
+			jumpTotalTime = 0;
+			jumpTimer = 0;
+			totalDist -= jumpRange;
+		}
+	}
+	else
+	{
+		jump(blocks);
+		// free fall
+		if (hasGround(this, blocks).x == -1)
 		{
 			y += 15;
 			Rectangle r = hasGround(this, blocks);
@@ -110,100 +169,6 @@ void Player::update(set<Block*> blocks)
 			{
 				y = r.y - height - 1;
 			}
-		}
-		else
-		{
-			printf("Jumping...\n");
-			if (jumpTimer == 0)
-			{
-				jumpTimer = t.milliseconds();
-			}
-			else
-			{
-				jumpTotalTime = t.milliseconds() - jumpTimer;
-				jumpTimer = t.milliseconds();
-			}
-
-			int jumpRange = 0;
-			if (jumpDist < 100)
-			{
-				y -= 12;
-				jumpDist += 12;
-				jumpRange = 12;
-			}
-			else if (jumpDist < 180)
-			{
-				y -= 8;
-				jumpDist += 8;
-				jumpRange = 8;
-			}
-			else if (jumpDist < 220)
-			{
-				y -= 3;
-				jumpDist += 3;
-				jumpRange = 3;
-			}
-			else
-			{
-				printf("End of jumping\n");
-				jumping = false;
-				jumpDist = 0;
-				jumpTimer = 0;
-				jumpTotalTime = 0;
-				return;
-			}
-
-			if (collisions(this, blocks).x != -1)
-			{
-				y += jumpRange;
-				jumpDist = 0;
-				jumping = false;
-				jumpTotalTime = 0;
-				jumpTimer = 0;
-
-			}
-			printf("Jumping time: %d\n", jumpTotalTime);
-		}
-	}
-	else
-	{
-		if (jumping)
-		{
-			printf("Jumping...\n");
-			if (jumpTimer == 0)
-			{
-				jumpTimer = t.milliseconds();
-			}
-			else
-			{
-				jumpTotalTime = t.milliseconds() - jumpTimer;
-				jumpTimer = t.milliseconds();
-			}
-
-			if (jumpDist < 100)
-			{
-				y -= 15;
-				jumpDist += 15;
-			}
-			else if (jumpDist < 180)
-			{
-				y -= 8;
-				jumpDist += 8;
-			}
-			else if (jumpDist < 220)
-			{
-				y -= 3;
-				jumpDist += 3;
-			}
-			else
-			{
-				printf("End of jumping\n");
-				jumping = false;
-				jumpDist = 0;
-				jumpTimer = 0;
-				jumpTotalTime = 0;
-			}
-			printf("Jumping time: %d\n", jumpTotalTime);
 		}
 	}
 }
@@ -242,17 +207,22 @@ int Player::getHeight()
 	return height;
 }
 
-Rectangle collisions(Player* p, set<Block*> blocks)
+int Player::getTotalDistance()
+{
+	return totalDist;
+}
+
+Rectangle* collisions(Player* p, set<Block*> blocks)
 {
 	for (auto b : blocks)
 	{
 		if (rectOverlap(p->getRectangle(), b->getRectangle()))
 		{
-			Rectangle r = b->getRectangle();
+			Rectangle* r = &b->getRectangle();
 			return r;
 		}
 	}
-	return { -1 };
+	return NULL;
 }
 
 Rectangle hasGround(Player* p, set<Block*> blocks)

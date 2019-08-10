@@ -27,11 +27,15 @@ private:
 	int jumpDist = 0;
 	long jumpTimer = 0;
 	int jumpTotalTime = 0;
+	// ---
+	int totalDist;
+	int freeFallDist;
 	// utilities
 	Utils u;
 	Timer t;
 public:
 	Player(const char* texturePath, int w, int h, int x, int y, SDL_Renderer* renderer);
+	~Player();
 	void render(SDL_Renderer* renderer);
 	void move(int moveX, int moveY, set<Block*> blocks);
 	void update(set<Block*> blocks);
@@ -41,6 +45,7 @@ public:
 	int getX();
 	int getWidth();
 	int getHeight();
+	int getTotalDistance();
 };
 
 #endif // !PLAYER_H
