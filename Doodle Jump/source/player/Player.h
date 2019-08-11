@@ -28,8 +28,8 @@ private:
 	long jumpTimer = 0;
 	int jumpTotalTime = 0;
 	// ---
-	int totalDist;
-	int freeFallDist;
+	int totalDistCurrent;
+	int totalDistMax;
 	// utilities
 	Utils u;
 	Timer t;

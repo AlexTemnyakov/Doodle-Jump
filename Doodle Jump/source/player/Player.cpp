@@ -14,7 +14,8 @@ Player::Player(const char* texturePath, int w, int h, int _x, int _y, SDL_Render
 	x = _x;
 	y = _y;
 	dir = true;
-	totalDist = 0;
+	totalDistCurrent = 0;
+	totalDistMax = 0;
 }
 
 Player::~Player()
@@ -104,9 +105,11 @@ void Player::move(int moveX, int moveY, set<Block*> blocks)
 
 void Player::update(set<Block*> blocks)
 {
+	int yPrev = y;
+	int shift = 0;
 	if (jumping)
 	{
-		printf("Jumping... Distance %d\n", jumpDist);
+		//printf("Jumping... Distance %d\n", jumpDist);
 		if (jumpTimer == 0)
 		{
 			jumpTimer = t.milliseconds();
@@ -119,31 +122,35 @@ void Player::update(set<Block*> blocks)
 
 		// because of shifting the world if the player is above than 1/3 part of the window,
 		// we need to avoid extension of the jump
-		int shift = (y < u.W_HEIGHT / 3) ? 8 : 0;
+		shift = (y < u.W_HEIGHT / 3) ? 8 : 0;
 		// how long the player has jumped
 		int jumpRange = 0;
 		if (jumpDist < 80)
 		{
 			y -= 10;
 			jumpDist += 10 + shift;
+			jumpRange = 10;
 		}
 		else if (jumpDist < 220)
 		{
 			y -= 8;
 			jumpDist += 8 + shift;
+			jumpRange = 8;
 		}
 		else if (jumpDist < 280)
 		{
 			y -= 5;
 			jumpDist += 5 + shift;
+			jumpRange = 5;
 		}
 		else
 		{
-			printf("End of jumping\n");
+			//printf("End of jumping\n");
 			jumping = false;
 			jumpDist = 0;
 			jumpTimer = 0;
 			jumpTotalTime = 0;
+			jumpRange = 0;
 			return;
 		}
 
@@ -155,7 +162,7 @@ void Player::update(set<Block*> blocks)
 			jumping = false;
 			jumpTotalTime = 0;
 			jumpTimer = 0;
-			totalDist -= jumpRange;
+			jumpRange = 0;
 		}
 	}
 	else
@@ -172,6 +179,10 @@ void Player::update(set<Block*> blocks)
 			}
 		}
 	}
+	int dist = yPrev - (y - shift);
+	totalDistCurrent += dist;
+	if (totalDistCurrent > totalDistMax)
+		totalDistMax = totalDistCurrent;
 }
 
 void Player::jump(set<Block*> blocks)
@@ -210,7 +221,7 @@ int Player::getHeight()
 
 int Player::getTotalDistance()
 {
-	return totalDist;
+	return totalDistMax;
 }
 
 Rectangle* collisions(Player* p, set<Block*> blocks)

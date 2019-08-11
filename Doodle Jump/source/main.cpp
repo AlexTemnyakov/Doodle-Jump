@@ -6,5 +6,6 @@ int main(int argc, char* args[])
 	if (game->init())
 		game->run();
 	game->stop();
+	delete game;
 	return 0;
 }

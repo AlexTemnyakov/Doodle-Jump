@@ -178,13 +178,13 @@ void Game::runGameLoop()
 			world->render(window->getRenderer());
 			player->render(window->getRenderer());
 
-			/*SDL_Color BLACK = { 0, 0, 0 };
+			SDL_Color BLACK = { 0, 0, 0 };
 			TTF_Font* arialBold50 = TTF_OpenFont("resources/fonts/arialbd.ttf", 50);
-			Texture* distanceTexture = new Texture(window->getRenderer());
+			Texture* distanceTexture = new Texture();
 			string distanceStr = to_string(player->getTotalDistance());
 			distanceTexture->loadFromRenderedText(distanceStr, BLACK, arialBold50, window->getRenderer());
 			distanceTexture->render(window->getRenderer(), 10, 10);
-			distanceTexture->~Texture();*/
+			distanceTexture->~Texture();
 
 			window->updateScreen();
 		}
