@@ -43,7 +43,7 @@ void Player::move(int moveX, int moveY, set<Block*> blocks)
 			Rectangle* c = collisions(this, blocks);
 			if (c != NULL)
 			{
-				printf("Collision moveX > 0\n");
+				//printf("Collision moveX > 0\n");
 				//x = c.x - width - 1;
 				x -= moveX;
 				return;
@@ -246,6 +246,7 @@ Rectangle* hasGround(Player* p, set<Block*> blocks)
 		if (xInRange && yInRange)
 		{
 			Rectangle r = b->getRectangle();
+			b->setTouched();
 			return &r;
 		}
 	}

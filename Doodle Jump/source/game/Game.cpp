@@ -185,6 +185,7 @@ void Game::runGameLoop()
 			distanceTexture->loadFromRenderedText(distanceStr, BLACK, arialBold50, window->getRenderer());
 			distanceTexture->render(window->getRenderer(), 10, 10);
 			distanceTexture->~Texture();
+			TTF_CloseFont(arialBold50);
 
 			window->updateScreen();
 		}

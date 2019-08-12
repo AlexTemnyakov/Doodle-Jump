@@ -1,14 +1,18 @@
 #include "Block.h"
 #include "../utils/Utils.h"
 
-Block::Block(const char* texturePath, int _x, int _y, int w, int h, SDL_Renderer* renderer)
+Block::Block(const char* texturePath, int _x, int _y, int w, int h, SDL_Renderer* renderer, bool _breakable)
 {
 	Utils u;
-	texture = new Texture(u.blockTexturePath, w, h, renderer);
+	if (_breakable)
+		texture = new Texture(u.blockBreakableTexturePath, w, h, renderer);
+	else
+		texture = new Texture(u.blockTexturePath, w, h, renderer);
 	x = _x;
 	y = _y;
 	width = w;
 	height = h;
+	breakable = _breakable;
 }
 
 Block::~Block()
@@ -50,4 +54,19 @@ int Block::getWidth()
 int Block::getHeight()
 {
 	return height;
+}
+
+bool Block::isBreakable()
+{
+	return breakable;
+}
+
+bool Block::isTouched()
+{
+	return touched;
+}
+
+void Block::setTouched()
+{
+	touched = true;
 }

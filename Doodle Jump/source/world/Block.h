@@ -10,8 +10,10 @@ class Block
 private:
 	Texture *texture;
 	int x, y, width, height;
+	bool breakable;
+	bool touched = false;
 public:
-	Block(const char* texturePath, int _x, int _y, int w, int h, SDL_Renderer* renderer);
+	Block(const char* texturePath, int _x, int _y, int w, int h, SDL_Renderer* renderer, bool _breakable = false);
 	~Block();
 	void render(SDL_Renderer* renderer);
 	Rectangle getRectangle();
@@ -20,6 +22,9 @@ public:
 	int getX();
 	int getWidth();
 	int getHeight();
+	bool isBreakable();
+	bool isTouched();
+	void setTouched();
 };
 
 #endif // !BLOCK_H

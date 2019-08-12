@@ -31,9 +31,25 @@ void World::update(SDL_Renderer* renderer, int playersY)
 	// if the player if above 1/3 part of the window, shift the game world
 	if (playersY > u.W_HEIGHT / 3)
 		return;
-	int attemptsTotal = 50, attemptsCount = 0;
-	bool blockInRange = false;
+
+	// delete blocks that are breakable and have been touched by the player
 	std::set<Block*>::iterator it = blocks.begin();
+	while (it != blocks.end())
+	{
+		Block* b = *it;
+		if (b->isTouched() && b->isBreakable())
+		{
+			Block* _b = b;
+			it = blocks.erase(it);
+			_b->~Block();
+		}
+		else
+		{
+			it++;
+		}
+	}
+
+	bool blockInRange = false;
 	// if there is no block near, create new one
 	for (auto b : blocks)
 	{
@@ -49,6 +65,8 @@ void World::update(SDL_Renderer* renderer, int playersY)
 		while (true)
 		{
 			int xNew = rand() % (u.W_WIDTH - u.BLOCK_WIDTH);
+			if (xNew < u.PLAYER_WIDTH || xNew + u.BLOCK_WIDTH > u.W_WIDTH - u.PLAYER_WIDTH)
+				continue;
 			Rectangle r = { xNew, 0, u.BLOCK_WIDTH, u.BLOCK_HEIGHT };
 			bool overlap = false;
 			for (auto b : blocks)
@@ -63,12 +81,19 @@ void World::update(SDL_Renderer* renderer, int playersY)
 
 			if (!overlap)
 			{
-				blocks.insert(new Block("resources/textures/block.png", xNew, -50, 100, 50, renderer));
+				int breakAblePercentage = rand() % 100;
+				bool breakable;
+				if (breakAblePercentage < 80)
+					breakable = false;
+				else
+					breakable = true;
+				blocks.insert(new Block("resources/textures/block.png", xNew, -50, 100, 50, renderer, breakable));
 				break;
 			}
 		}
 	}
 
+	it = blocks.begin();
 	// shift blocks and delete them, if they are out of the game world
 	while (it != blocks.end())
 	{

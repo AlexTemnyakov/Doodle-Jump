@@ -21,6 +21,7 @@ public:
 	const char* playersTextureLeftPath = "resources/textures/playerLeft.png";
 	const char* playersTextureRightPath = "resources/textures/playerRight.png";
 	const char* blockTexturePath = "resources/textures/block.png";
+	const char* blockBreakableTexturePath = "resources/textures/blockBreakable.png";
 
 	// player's data
 	const int moveDist = 10;
